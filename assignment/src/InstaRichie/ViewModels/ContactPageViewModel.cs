@@ -24,11 +24,23 @@ namespace StartFinance.ViewModels
 
         public ContactPageViewModel()
         {
-            //Db = App.Data;
+            Db = App.Data;
 
             // Initializing a database
-            conn = new SQLite.Net.SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), path);
+            //conn = new SQLite.Net.SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), path);
 
+        }
+
+        public Contact Contact
+        {
+            get { return contact; }
+            set
+            {
+                if (contact != value)
+                {
+                    contact = value;
+                }
+            }
         }
 
         public bool IsDataLoaded
@@ -45,21 +57,7 @@ namespace StartFinance.ViewModels
 
         internal bool AddNewContact(Contact newContact)
         {
-            
-
             return Db.InsertContact(newContact);
-        }
-
-        public Contact Contact
-        {
-            get { return contact; }
-            set
-            {
-                if (contact != value)
-                {
-                    contact = value;
-                }
-            }
         }
 
         //public DetailsViewModel(int productId)
@@ -70,15 +68,15 @@ namespace StartFinance.ViewModels
 
         public async void SaveEditedContact(Contact c)
         {
-            //return Db.UpdateProduct(p);
+            //return Db.UpdateContact(c);
             MessageDialog md;
             if (Db.UpdateContact(c))
             {
-                md = new MessageDialog("Contact Updated", "UPDATE");
+                md = new MessageDialog("ContactPage Updated", "UPDATE");
             }
             else
             {
-                md = new MessageDialog("Contact NOT Updated", "UPDATE");
+                md = new MessageDialog("ContactPage NOT Updated", "UPDATE");
             }
             await md.ShowAsync();
         }

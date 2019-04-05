@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace StartFinance.Models
 {
-    class ContactRepository
+    public class ContactRepository : IContactRepository
     {
         string path;
         SQLiteConnection conn;

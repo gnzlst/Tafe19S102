@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StartFinance.Models
 {
-    interface IContactRepository
+    public interface IContactRepository
     {
         IEnumerable<Contact> GetContacts();
         Contact GetContactById(int contactId);

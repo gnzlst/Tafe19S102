@@ -1,4 +1,5 @@
-﻿using StartFinance.Models;
+﻿using SQLite.Net;
+using StartFinance.Models;
 using StartFinance.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -23,11 +24,12 @@ namespace StartFinance.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class NewContactPage : Page
+    public sealed partial class ContactPage : Page
     {
+
         private ContactPageViewModel viewModel;
 
-        public NewContactPage()
+        public ContactPage()
         {
             this.InitializeComponent();
         }
@@ -45,25 +47,23 @@ namespace StartFinance.Views
 
         private async void Save_Click(object sender, RoutedEventArgs e)
         {
-            Contact c = new Models.Contact();
+            Models.Contact c = new Models.Contact();
             c.ContactFirstName = txtContactFirstName.Text;
             c.ContactLastName = txtContactLastName.Text;
             c.ContactCompanyName = txtCompanyName.Text;
-            c.ContactMobilePhone = txtContactMobile.Text;
+            c.ContactMobilePhone = txtMobilePhone.Text;
 
             MessageDialog md;
             if (viewModel.AddNewContact(c))
             {
                 viewModel.LoadData();
-                md = new MessageDialog("Contact addedd to database", "UPDATE");
+                md = new MessageDialog("ContactPage addedd to database", "UPDATE");
             }
             else
             {
-                md = new MessageDialog("Contact NOT added to database", "UPDATE");
+                md = new MessageDialog("ContactPage NOT added to database", "UPDATE");
             }
             await md.ShowAsync();
-
-            //Frame.Navigate(typeof(MainPage));
         }
     }
 }
