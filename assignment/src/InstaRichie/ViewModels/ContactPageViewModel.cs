@@ -12,14 +12,25 @@ using Windows.UI.Popups;
 
 namespace StartFinance.ViewModels
 {
-    class ContactPageViewModel : INotifyPropertyChanged
+    public class ContactPageViewModel : INotifyPropertyChanged
     {
-        private Contact contact;
         private IContactRepository Db { get; }
         public ObservableCollection<Contact> Contacts { get; set; }
 
-        SQLiteConnection conn; // adding an SQLite connection
-        string path = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, "Findata.sqlite");
+        //SQLiteConnection conn; // adding an SQLite connection
+        //string path = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, "Findata.sqlite");
+        private Contact contact;
+        public Contact Contact
+        {
+            get { return contact; }
+            set
+            {
+                if (contact != value)
+                {
+                    contact = value;
+                }
+            }
+        }
 
 
         public ContactPageViewModel()
@@ -31,16 +42,10 @@ namespace StartFinance.ViewModels
 
         }
 
-        public Contact Contact
+        public ContactPageViewModel(int contactId)
         {
-            get { return contact; }
-            set
-            {
-                if (contact != value)
-                {
-                    contact = value;
-                }
-            }
+            Db = App.Data;
+            this.Contact = Db.GetContactById(contactId);
         }
 
         public bool IsDataLoaded
@@ -60,11 +65,10 @@ namespace StartFinance.ViewModels
             return Db.InsertContact(newContact);
         }
 
-        //public DetailsViewModel(int productId)
-        //{
-        //    Db = App.Data;
-        //    this.Product = Db.GetProductById(productId);
-        //}
+        internal bool DeleteContact(int contactId)
+        {
+            return Db.DeleteContact(contactId);
+        }
 
         public async void SaveEditedContact(Contact c)
         {
@@ -79,6 +83,11 @@ namespace StartFinance.ViewModels
                 md = new MessageDialog("ContactPage NOT Updated", "UPDATE");
             }
             await md.ShowAsync();
+        }
+
+        public Contact GetContactById(int contactId)
+        {
+            return Db.GetContactById(contactId);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

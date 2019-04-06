@@ -20,7 +20,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     
     xmlns:vm="using:StartFinance.ViewModels" mc:Ignorable="d">
-    <!--Loaded="Page_Loaded"-->
+
     <Page.DataContext>
         <vm:MainPageViewModel x:Name="ViewModel" />
     </Page.DataContext>
@@ -44,8 +44,8 @@
 
             <!--  secondary commands  -->
             <controls:PageHeader.PrimaryCommands>
-                <AppBarButton Icon="Edit" Label="Edit Contact" /> <!--Click="AddData"-->
-                <AppBarButton Icon="Delete" Label="Delete Contact" />
+                <AppBarButton x:Name="btnEdit" Icon="Edit" Label="Edit Contact" Click="btnEdit_Click" />
+                <AppBarButton x:Name="btnDelete" Icon="Delete" Label="Delete Contact" Click="btnDelete_Click" />
             </controls:PageHeader.PrimaryCommands>
             
         </controls:PageHeader>
@@ -54,7 +54,16 @@
         <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="10,5,10,0">
             <RelativePanel.Below>pageHeader</RelativePanel.Below>
             <RelativePanel.Above>pageFooter</RelativePanel.Above>
-            <ListView x:Name="ContactList"/> <!-- ItemTemplate="{StaticResource TincanList}"-->
+            <ListView x:Name="ContactList" DataContext="ContactPageViewModel">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="0,0,0,17" Width="432" Height="78" Orientation="Horizontal">
+                            <TextBlock Text="{Binding ContactFirstName}" TextWrapping="Wrap"  Style="{StaticResource SubheaderTextBlockStyle}"/>
+                            <TextBlock Text="{Binding ContactLastName}" TextWrapping="Wrap"  Style="{StaticResource SubheaderTextBlockStyle}" Margin="10,0,0,0"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </StackPanel>
     </RelativePanel>
 </Page>

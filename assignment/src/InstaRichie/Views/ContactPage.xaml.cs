@@ -36,14 +36,30 @@ namespace StartFinance.Views
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            
+            Contact contact;
+            int id;
+            
+            if(e.Parameter != null)
+            {
+                //id = (int)e.Parameter;
+                id = Template10.Services.SerializationService.SerializationService.Json.Deserialize<int>(e.Parameter?.ToString());
+                viewModel = new ContactPageViewModel(id);
+
+                contact = viewModel.GetContactById(id);
+                txtContactFirstName.Text = contact.ContactFirstName;
+                txtContactLastName.Text = contact.ContactLastName;
+                txtCompanyName.Text = contact.ContactCompanyName;
+                txtMobilePhone.Text = contact.ContactMobilePhone;
+            }
             base.OnNavigatedTo(e);
             viewModel = new ContactPageViewModel();
         }
 
-        private void Cancel_Click(object sender, RoutedEventArgs e)
-        {
-            Frame.Navigate(typeof(MainPage));
-        }
+        //private void Cancel_Click(object sender, RoutedEventArgs e)
+        //{
+        //    Frame.Navigate(typeof(MainPage));
+        //}
 
         private async void Save_Click(object sender, RoutedEventArgs e)
         {
@@ -54,14 +70,19 @@ namespace StartFinance.Views
             c.ContactMobilePhone = txtMobilePhone.Text;
 
             MessageDialog md;
+
             if (viewModel.AddNewContact(c))
             {
                 viewModel.LoadData();
-                md = new MessageDialog("ContactPage addedd to database", "UPDATE");
+                md = new MessageDialog(c.ContactFirstName + " " + c.ContactLastName + " addedd to database");
+                txtContactFirstName.Text = "";
+                txtContactLastName.Text = "";
+                txtCompanyName.Text = "";
+                txtMobilePhone.Text = "";
             }
             else
             {
-                md = new MessageDialog("ContactPage NOT added to database", "UPDATE");
+                md = new MessageDialog(c.ContactFirstName + " " + c.ContactLastName + " couldn't be added to database");
             }
             await md.ShowAsync();
         }
