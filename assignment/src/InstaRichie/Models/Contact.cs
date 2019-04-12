@@ -18,7 +18,6 @@ namespace StartFinance.Models
         [NotNull]
         public string ContactLastName { get; set; }
 
-        [NotNull]
         public string ContactCompanyName { get; set; }
 
         public string ContactMobilePhone { get; set; }
