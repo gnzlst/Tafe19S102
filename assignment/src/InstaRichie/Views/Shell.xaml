@@ -98,16 +98,28 @@
                                Text="WishList" />
                 </StackPanel>
             </Controls:HamburgerButtonInfo>
+<<<<<<< HEAD
 
             <!--  Shopping List button  -->
             <Controls:HamburgerButtonInfo ClearHistory="True" PageType="views:ShoppingListPage" 
+=======
+            
+            <!-- Contact button -->
+            <Controls:HamburgerButtonInfo ClearHistory="True" PageType="views:ContactPage" 
+>>>>>>> feat_ContactDetails
                                           AutomationProperties.Name="Jerry"
                                           >
                 <StackPanel Orientation="Horizontal">
                     <SymbolIcon Width="48" Height="48"
+<<<<<<< HEAD
                 		Symbol="Shop" />
                     <TextBlock Margin="12,0,0,0" VerticalAlignment="Center"
                                Text="Shopping List" />
+=======
+                		Symbol="Contact" />
+                    <TextBlock Margin="12,0,0,0" VerticalAlignment="Center"
+                               Text="Contacts" />
+>>>>>>> feat_ContactDetails
                 </StackPanel>
             </Controls:HamburgerButtonInfo>
         </Controls:HamburgerMenu.PrimaryButtons>

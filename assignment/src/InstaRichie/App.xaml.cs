@@ -24,6 +24,7 @@ using Template10.Common;
 using System;
 using System.Linq;
 using Windows.UI.Xaml.Data;
+using StartFinance.Models;
 
 namespace StartFinance
 {
