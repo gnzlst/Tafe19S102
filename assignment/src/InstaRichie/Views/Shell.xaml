@@ -98,45 +98,32 @@
                                Text="WishList" />
                 </StackPanel>
             </Controls:HamburgerButtonInfo>
-<<<<<<< HEAD
-<<<<<<< HEAD
 
             <!--  Shopping List button  -->
             <Controls:HamburgerButtonInfo ClearHistory="True" PageType="views:ShoppingListPage" 
-=======
-            
+                                          AutomationProperties.Name="Jerry">
+                <StackPanel Orientation="Horizontal">                    
+                    <SymbolIcon Width="48" Height="48" Symbol="Shop" />
+                    <TextBlock Margin="12,0,0,0" VerticalAlignment="Center" Text="Shopping List" />
+                </StackPanel>
+            </Controls:HamburgerButtonInfo>
+
             <!-- Contact button -->
-            <Controls:HamburgerButtonInfo ClearHistory="True" PageType="views:ContactPage" 
->>>>>>> feat_ContactDetails
-=======
+            <Controls:HamburgerButtonInfo ClearHistory="True" PageType="views:ContactPage" AutomationProperties.Name="Jerry">
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Width="48" Height="48" Symbol="Contact" />
+                    <TextBlock Margin="12,0,0,0" VerticalAlignment="Center" Text="Contacts" />
+                </StackPanel>
+            </Controls:HamburgerButtonInfo>
 
             <!--  Personal Info button  -->
-            <Controls:HamburgerButtonInfo ClearHistory="True" PageType="views:PersonalInfoPage" 
->>>>>>> feat_PersonalInfo
-                                          AutomationProperties.Name="Jerry"
-                                          >
+            <Controls:HamburgerButtonInfo ClearHistory="True" PageType="views:PersonalInfoPage" AutomationProperties.Name="Jerry">
                 <StackPanel Orientation="Horizontal">
-                    <SymbolIcon Width="48" Height="48"
-<<<<<<< HEAD
-<<<<<<< HEAD
-                		Symbol="Shop" />
-                    <TextBlock Margin="12,0,0,0" VerticalAlignment="Center"
-                               Text="Shopping List" />
-=======
-                		Symbol="Contact" />
-                    <TextBlock Margin="12,0,0,0" VerticalAlignment="Center"
-                               Text="Contacts" />
->>>>>>> feat_ContactDetails
+                    <SymbolIcon Width="48" Height="48" Symbol="ContactInfo" />
+                    <TextBlock Margin="12,0,0,0" VerticalAlignment="Center" Text="Personal Info" />
                 </StackPanel>
-            </Controls:HamburgerButtonInfo>
-=======
-                		Symbol="ContactInfo" />
-                    <TextBlock Margin="12,0,0,0" VerticalAlignment="Center"
-                               Text="Personal Info" />
-                </StackPanel>
-            </Controls:HamburgerButtonInfo>
+            </Controls:HamburgerButtonInfo>                		
 
->>>>>>> feat_PersonalInfo
         </Controls:HamburgerMenu.PrimaryButtons>
 
         <Controls:HamburgerMenu.SecondaryButtons>
