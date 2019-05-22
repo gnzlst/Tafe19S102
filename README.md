@@ -156,15 +156,12 @@ $ bower install
 
 ## Team
 
-> Or Contributors/People
+> Contributors
 
 | <a href="#" target="_blank">**WEBSITE**</a> | <a href="#" target="_blank">**WEBSITE**</a> | <a href="#" target="_blank">**WEBSITE**</a> |
 | :---: |:---:| :---:|
-| [![FVCproductions](https://avatars1.githubusercontent.com/u/4284691?v=3&s=200)](#)    | [![FVCproductions](https://avatars1.githubusercontent.com/u/4284691?v=3&s=200)](#) | [![FVCproductions](https://avatars1.githubusercontent.com/u/4284691?v=3&s=200)](#)  |
-| <a href="#" target="_blank">`github.com/gnzlst`</a> | <a href="http://github.com/gnzlst" target="_blank">`github.com/gnzlst`</a> | <a href="http://github.com/gnzlsts" target="_blank">`github.com/gnzlst`</a> |
-
-- You can just grab their GitHub profile image URL
-- You should probably resize their picture using `?s=200` at the end of the image URL.
+| [![FVCproductions](https://avatars3.githubusercontent.com/u/48195783?s=200&v=3)](#)    | [![FVCproductions](https://avatars0.githubusercontent.com/u/47961046?s=200&v=3)](#) | [![FVCproductions](https://avatars3.githubusercontent.com/u/33232418?s=200&v=3)](#)  |
+| <a href="github.com/aleferro" target="_blank">`github.com/aleferro`</a> | <a href="http://github.com/thinn5" target="_blank">`github.com/thinn5`</a> | <a href="http://github.com/gnzlst" target="_blank">`github.com/gnzlst`</a> |
 
 ---
 
