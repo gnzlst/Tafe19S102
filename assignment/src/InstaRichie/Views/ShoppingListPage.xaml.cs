@@ -108,8 +108,8 @@ namespace StartFinance.Views
         {
             try
             {
-                string AccSelection = ((ShoppingList)ShoppingListView.SelectedItem).ProductName;
-                if (AccSelection == "")
+                int AccSelection = ((ShoppingList)ShoppingListView.SelectedItem).ID;
+                if (AccSelection < 0)
                 {
                     MessageDialog dialog = new MessageDialog("Oops..!", "Please select an item.");
                     await dialog.ShowAsync();
@@ -126,7 +126,7 @@ namespace StartFinance.Views
                         else
                         {
                             double TempMoney = Convert.ToDouble(MoneyIn.Text);
-                            conn.Query<ShoppingList>("UPDATE ShoppingList SET ProductName = '" + _PurchaseName.Text.ToString() + "', Money = '" + TempMoney + "'");
+                            conn.Query<ShoppingList>("UPDATE ShoppingList SET ProductName = '" + _PurchaseName.Text.ToString() + "', Money = '" + TempMoney + "' WHERE ID = " + AccSelection);
                         }
                     }
                     catch (Exception ex)
