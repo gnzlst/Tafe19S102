@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:util='http://schemas.microsoft.com/wix/UtilExtension'
+     xmlns:sql='http://schemas.microsoft.com/wix/SqlExtension'
+     xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
+  <Product Id="2CE46671-044E-4476-A91A-C892A420176A" Name="VendorMaintenanceWix" Language="1033" Version="1.0.0.0" Manufacturer="Takuma Wood-Cooper" UpgradeCode="7FF99A7D-3783-4CD3-AD14-E2FE94CAA09D">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+    <WixVariable Id="WixUILicenseRtf" Value="./Redistribution license agreement.rtf" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate EmbedCab="yes" />
+
+    <!-- Step 0: Add program features-->
+    <!--Add Component-->
+    <Feature Id="ProductFeature" Title="VendorMaintenanceApp" Level="1">
+      <ComponentRef Id="VendorMaintenance.exe" />
+      <!--Step 1.2:Add Start menu or program  Shortcut-->
+      <ComponentRef Id="ApplicationShortcut" />
+      <!--step 2.2Add DeskTop Shortcut-->
+      <ComponentRef Id="ApplicationDeskShortcutComp" />
+    </Feature>
+
+    <UIRef Id="WixUI_Minimal"/>
+
+  </Product>
+
+	<Fragment>
+    <!--    <util:User Id="SQLUser" Name="[TAFESA\YourStudentID" Password="[YourPassword]"/>  -->
+    
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="VendorMaintenanceWix" />
+        <Component Id="SqlComponent" Guid="6C4EAB0A-FF58-42CC-9D29-53782600188A" KeyPath="yes">
+          <sql:SqlDatabase Id="SqlDatabase"
+                           Database="Payables"
+                           Server=".\SQLEXPRESS"
+                           DropOnInstall="no"
+                           CreateOnInstall="yes"
+                           DropOnUninstall="yes"
+                           ContinueOnError="no"
+                           ConfirmOverwrite="yes">
+            <sql:SqlScript Id="DoEverything" BinaryKey="DoEverything" ExecuteOnInstall="yes" />
+          </sql:SqlDatabase>
+        </Component>
+
+      </Directory>
+      <!-- Step 1: For the Program Menu -->
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ApplicationProgramsFolder" Name="Banking"/>
+      </Directory>
+
+      <!--Step 2:For Desktop Folder-->
+      <Directory Id="DesktopFolder"/>
+
+    </Directory>
+    <Binary Id="DoEverything" SourceFile="Payables.sql" />
+    <Feature Id="SqlFeature" Title="SqlFeature" Level="1">
+      <ComponentRef Id="SqlComponent"/>
+    </Feature>
+
+  </Fragment>
+
+	<Fragment>
+    <!--Step 4 :Add Main App exe-->
+    <DirectoryRef Id="INSTALLFOLDER">
+      <Component Id="VendorMaintenance.exe" Guid="515978E5-7754-4EED-9ED2-9B0E86E0BB2C">
+        <File Source="$(var.VendorMaintenance.TargetPath)" Name="VendorMaintenance.exe"
+              Id="VendorMaintenanceEXE" KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+    <!-- Step 1.1: Add the shortcut to your installer package Program Menu or Start Menu-->
+    <DirectoryRef Id="ApplicationProgramsFolder">
+      <Component Id="ApplicationShortcut" Guid="5AA1D659-E601-4FC5-B08C-09DAB3F88F54">
+        <!--Add Shortcut of the Application in start Menu-->
+        <Shortcut Id="ApplicationStartMenuShortcut" Name="MyBankingApp" Description="My Banking Application"
+            Target="[INSTALLFOLDER]S04Ex02_BankingApp.exe" WorkingDirectory="INSTALLFOLDER">
+          <!--Add Icon to the ShortCut-->
+          <Icon Id="MYPMenuIcon"  SourceFile=".\vendor-icon.png" />
+        </Shortcut>
+        <!--Remove the Folder At time of Uninstall-->
+        <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
+        <RegistryValue Root="HKCU"  Key='Software\[Manufacturer]\[ProductName]'
+                       Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+    <!-- Step 2.1: Add the shortcut to your installer package For DeskTop-->
+    <DirectoryRef Id="DesktopFolder">
+      <Component Id="ApplicationDeskShortcutComp" Guid="4FE5A40D-BF49-425E-9E6A-176E85FE9B52">
+        <Shortcut Id="ApplicationDeskShortcut" Name="MYAppDesk"
+                  Description="My Application Description" Target="[INSTALLFOLDER]S04Ex02_BankingApp.exe"
+                  WorkingDirectory="INSTALLFOLDER">
+          <Icon Id="MYDeskIcon"  SourceFile=".\vendor-icon.png" />
+        </Shortcut>
+        <RemoveFolder Id="DesktopFolder" On="uninstall"/>
+        <RegistryValue Root="HKCU"  Key='Software\[Manufacturer]\[ProductName]'
+                       Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+
+  </Fragment>
+</Wix>
