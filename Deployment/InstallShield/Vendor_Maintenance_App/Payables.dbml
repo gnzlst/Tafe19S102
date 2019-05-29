@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Payables" Class="PayablesDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=localhost\sqlexpress;Initial Catalog=Payables;Integrated Security=True" SettingsObjectName="VendorMaintenance.Properties.Settings" SettingsPropertyName="PayablesConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Vendors" Member="Vendors">
+    <Type Name="Vendor">
+      <Column Name="VendorID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Address1" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Address2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="City" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="State" Type="System.String" DbType="Char(2) NOT NULL" CanBeNull="false" />
+      <Column Name="ZipCode" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="Phone" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="ContactLName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ContactFName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="DefaultTermsID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DefaultAccountNo" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Vendor_Invoice" Member="Invoices" ThisKey="VendorID" OtherKey="VendorID" Type="Invoice" />
+      <Association Name="Vendor_VendorsSummary" Member="VendorsSummary" ThisKey="VendorID" OtherKey="VendorID" Type="VendorsSummary" Cardinality="One" />
+      <Association Name="State_Vendor" Member="State1" ThisKey="State" OtherKey="StateCode" Type="State" IsForeignKey="true" />
+      <Association Name="Term_Vendor" Member="Term" ThisKey="DefaultTermsID" OtherKey="TermsID" Type="Term" IsForeignKey="true" />
+      <Association Name="GLAccount_Vendor" Member="GLAccount" ThisKey="DefaultAccountNo" OtherKey="AccountNo" Type="GLAccount" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.States" Member="States">
+    <Type Name="State">
+      <Column Name="StateCode" Type="System.String" DbType="Char(2) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="StateName" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="FirstZipCode" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="LastZipCode" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="State_Vendor" Member="Vendors" ThisKey="StateCode" OtherKey="State" Type="Vendor" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Terms" Member="Terms">
+    <Type Name="Term">
+      <Column Name="TermsID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="DueDays" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Association Name="Term_Vendor" Member="Vendors" ThisKey="TermsID" OtherKey="DefaultTermsID" Type="Vendor" />
+      <Association Name="Term_Invoice" Member="Invoices" ThisKey="TermsID" OtherKey="TermsID" Type="Invoice" />
+    </Type>
+  </Table>
+  <Table Name="dbo.GLAccounts" Member="GLAccounts">
+    <Type Name="GLAccount">
+      <Column Name="AccountNo" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="GLAccount_Vendor" Member="Vendors" ThisKey="AccountNo" OtherKey="DefaultAccountNo" Type="Vendor" />
+      <Association Name="GLAccount_InvoiceLineItem" Member="InvoiceLineItems" ThisKey="AccountNo" OtherKey="AccountNo" Type="InvoiceLineItem" />
+    </Type>
+  </Table>
+  <Table Name="dbo.InvoiceLineItems" Member="InvoiceLineItems">
+    <Type Name="InvoiceLineItem">
+      <Column Name="InvoiceID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="InvoiceSequence" Type="System.Int16" DbType="SmallInt NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="AccountNo" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Amount" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Association Name="GLAccount_InvoiceLineItem" Member="GLAccount" ThisKey="AccountNo" OtherKey="AccountNo" Type="GLAccount" IsForeignKey="true" />
+      <Association Name="Invoice_InvoiceLineItem" Member="Invoice" ThisKey="InvoiceID" OtherKey="InvoiceID" Type="Invoice" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Invoices" Member="Invoices">
+    <Type Name="Invoice">
+      <Column Name="InvoiceID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="VendorID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="InvoiceNumber" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="InvoiceDate" Type="System.DateTime" DbType="SmallDateTime NOT NULL" CanBeNull="false" />
+      <Column Name="InvoiceTotal" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="PaymentTotal" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="CreditTotal" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="TermsID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DueDate" Type="System.DateTime" DbType="SmallDateTime NOT NULL" CanBeNull="false" />
+      <Column Name="PaymentDate" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Association Name="Invoice_InvoiceLineItem" Member="InvoiceLineItems" ThisKey="InvoiceID" OtherKey="InvoiceID" Type="InvoiceLineItem" />
+      <Association Name="Term_Invoice" Member="Term" ThisKey="TermsID" OtherKey="TermsID" Type="Term" IsForeignKey="true" />
+      <Association Name="Vendor_Invoice" Member="Vendor" ThisKey="VendorID" OtherKey="VendorID" Type="Vendor" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VendorsSummary" Member="VendorsSummaries">
+    <Type Name="VendorsSummary">
+      <Column Name="VendorID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="SumOfInvoices" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="LastInvoiceDate" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="SumOfPayments" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="LastPaymentDate" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="SumOfCredits" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="BalanceDue" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Association Name="Vendor_VendorsSummary" Member="Vendor" ThisKey="VendorID" OtherKey="VendorID" Type="Vendor" IsForeignKey="true" />
+    </Type>
+  </Table>
+</Database>
