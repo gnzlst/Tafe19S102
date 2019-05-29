@@ -75,7 +75,7 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Iconleak-Cerulean-Science-chemistry.ico</ApplicationIcon>
+    <ApplicationIcon>vendor_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -224,6 +224,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Iconleak-Cerulean-Science-chemistry.ico" />
+    <Content Include="vendor_icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
