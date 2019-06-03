@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,11 +12,18 @@ using MetroFramework.Drawing;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+using System.Configuration;
 
 namespace Hotel_Manager
 {
     public partial class Login : MetroForm
     {
+
+        SqlConnection conn;
+        SqlDataReader dr;
+        SqlCommand cmd;
+
+
         public Login()
         {
             InitializeComponent();
@@ -90,33 +98,35 @@ namespace Hotel_Manager
         public bool verifier(string tableName, string username, string password)
         {
             bool success = false;
-           
-            SqlConnection connection = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB; database=login_manager; AttachDbFilename=C:\Hotel_Management_(additional)\HotelManagement\login_manager.mdf; Integrated Security = True; Connect Timeout = 30");
-
-            string sql = "SELECT * FROM "  + tableName+ " WHERE user_name=@userName AND pass_word=@password";
-
-           // string testingUserName = @username;
+            ConnectionStringSettings connSettings = ConfigurationManager.ConnectionStrings["DBConnectApp"];
+            string connectionString = connSettings.ConnectionString;
+            string sql = "SELECT * FROM " + tableName + " WHERE user_name=@userName AND pass_word=@password";
             try
             {
-                SqlCommand sqlCommand = new SqlCommand(sql, connection);
-                sqlCommand.CommandText = sql;
+                conn = new SqlConnection(connectionString);
+                conn.Open();
+                cmd = new SqlCommand(sql, conn);
+                cmd.CommandText = sql;
                 SqlParameter UsernameParametar = new SqlParameter("@username", SqlDbType.VarChar);
                 SqlParameter PassParametar = new SqlParameter("@password", SqlDbType.VarChar);
-                sqlCommand.Parameters.Add(UsernameParametar);
-                sqlCommand.Parameters.Add(PassParametar);
+                cmd.Parameters.Add(UsernameParametar);
+                cmd.Parameters.Add(PassParametar);
                 UsernameParametar.Value = username;
                 PassParametar.Value = password;
-                connection.Open();
-                SqlDataReader sqlReader = sqlCommand.ExecuteReader();
-
-                if (sqlReader.HasRows)
+                dr = cmd.ExecuteReader();
+                if (dr.HasRows)
                     success = true;
-                connection.Close();
+                conn.Close();
             }
             catch (Exception e)
             {
                 MetroFramework.MetroMessageBox.Show(this, e.ToString(), "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
             }
+            finally
+            {
+                conn.Close();
+            }
+           
             return success;
         }
 
