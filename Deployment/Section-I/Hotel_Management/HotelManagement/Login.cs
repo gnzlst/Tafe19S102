@@ -22,8 +22,7 @@ namespace Hotel_Manager
         SqlConnection conn;
         SqlDataReader dr;
         SqlCommand cmd;
-
-
+        
         public Login()
         {
             InitializeComponent();
@@ -107,12 +106,12 @@ namespace Hotel_Manager
                 conn.Open();
                 cmd = new SqlCommand(sql, conn);
                 cmd.CommandText = sql;
-                SqlParameter UsernameParametar = new SqlParameter("@username", SqlDbType.VarChar);
-                SqlParameter PassParametar = new SqlParameter("@password", SqlDbType.VarChar);
-                cmd.Parameters.Add(UsernameParametar);
-                cmd.Parameters.Add(PassParametar);
-                UsernameParametar.Value = username;
-                PassParametar.Value = password;
+                SqlParameter UsernameParameter = new SqlParameter("@username", SqlDbType.VarChar);
+                SqlParameter PassParameter = new SqlParameter("@password", SqlDbType.VarChar);
+                cmd.Parameters.Add(UsernameParameter);
+                cmd.Parameters.Add(PassParameter);
+                UsernameParameter.Value = username;
+                PassParameter.Value = password;
                 dr = cmd.ExecuteReader();
                 if (dr.HasRows)
                     success = true;

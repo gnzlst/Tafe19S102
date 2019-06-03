@@ -225,6 +225,7 @@
 	<table name="AppSearch">
 		<col key="yes" def="s72">Property</col>
 		<col key="yes" def="s72">Signature_</col>
+		<row><td>SQLEXP2008SP1FOUND</td><td>NewRegSignature</td></row>
 	</table>
 
 	<table name="BBControl">
@@ -2612,7 +2613,7 @@
 		<col def="I2">Encoded</col>
 		<col def="S0">Comment</col>
 		<col def="I4">TimeStamp</col>
-		<row><td>COMPANY_NAME</td><td>1033</td><td>TAFE SA</td><td>0</td><td/><td>-358109489</td></row>
+		<row><td>COMPANY_NAME</td><td>1033</td><td>TAFE SA</td><td>0</td><td/><td>455547597</td></row>
 		<row><td>DN_AlwaysInstall</td><td>1033</td><td>Always Install</td><td>0</td><td/><td>-358146353</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_COLOR</td><td>1033</td><td>The color settings of your system are not adequate for running [ProductName].</td><td>0</td><td/><td>-358146353</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_DOTNETVERSION45FULL</td><td>1033</td><td>Microsoft .NET Framework 4.5 Full package or greater needs to be installed for this installation to continue.</td><td>0</td><td/><td>-358128592</td></row>
@@ -2620,6 +2621,7 @@
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_PROCESSOR</td><td>1033</td><td>The processor is not adequate for running [ProductName].</td><td>0</td><td/><td>-358146353</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_RAM</td><td>1033</td><td>The amount of RAM is not adequate for running [ProductName].</td><td>0</td><td/><td>-358146353</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_SCREEN</td><td>1033</td><td>The screen resolution is not adequate for running [ProductName].</td><td>0</td><td/><td>-358146353</td></row>
+		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_SQLEXP2008SP1FOUND</td><td>1033</td><td>SQL Server 2008 Express SP1 needs to be installed for this installation to continue.</td><td>0</td><td/><td>455573805</td></row>
 		<row><td>IDPROP_SETUPTYPE_COMPACT</td><td>1033</td><td>Compact</td><td>0</td><td/><td>-358146353</td></row>
 		<row><td>IDPROP_SETUPTYPE_COMPACT_DESC</td><td>1033</td><td>Compact Description</td><td>0</td><td/><td>-358146353</td></row>
 		<row><td>IDPROP_SETUPTYPE_COMPLETE</td><td>1033</td><td>Complete</td><td>0</td><td/><td>-358146353</td></row>
@@ -3426,6 +3428,7 @@
 		<row><td>IDS_SETUPEXE_EXPIRE_MSG</td><td>1033</td><td>This setup works until %s. The setup will now exit.</td><td>0</td><td/><td>-358146353</td></row>
 		<row><td>IDS_SETUPEXE_LAUNCH_COND_E</td><td>1033</td><td>This setup was built with an evaluation version of InstallShield and can only be launched from setup.exe.</td><td>0</td><td/><td>-358146353</td></row>
 		<row><td>IDS_SHORTCUT_DISPLAY_NAME1</td><td>1033</td><td>Launch |Built</td><td>0</td><td/><td>-358149776</td></row>
+		<row><td>IDS_SHORTCUT_DISPLAY_NAME2</td><td>1033</td><td>Launch |Built</td><td>0</td><td/><td>455564045</td></row>
 		<row><td>IDS_SQLBROWSE_INTRO</td><td>1033</td><td>From the list of servers below, select the database server you would like to target.</td><td>0</td><td/><td>-358146353</td></row>
 		<row><td>IDS_SQLBROWSE_INTRO_DB</td><td>1033</td><td>From the list of catalog names below, select the database catalog you would like to target.</td><td>0</td><td/><td>-358146353</td></row>
 		<row><td>IDS_SQLBROWSE_INTRO_TEMPLATE</td><td>1033</td><td>[IS_SQLBROWSE_INTRO]</td><td>0</td><td/><td>-358146353</td></row>
@@ -3714,8 +3717,8 @@
 		<row><td>IDS__TargetReq_DESC_PROCESSOR</td><td>1033</td><td>The processor is not adequate for running [ProductName].</td><td>0</td><td/><td>-358146353</td></row>
 		<row><td>IDS__TargetReq_DESC_RAM</td><td>1033</td><td>The amount of RAM is not adequate for running [ProductName].</td><td>0</td><td/><td>-358146353</td></row>
 		<row><td>IDS__TargetReq_DESC_RESOLUTION</td><td>1033</td><td>The screen resolution is not adequate for running [ProductName].</td><td>0</td><td/><td>-358146353</td></row>
-		<row><td>ID_STRING1</td><td>1033</td><td>http://www.TAFESA.edu.au</td><td>0</td><td/><td>-358117617</td></row>
-		<row><td>ID_STRING2</td><td>1033</td><td>TAFE SA</td><td>0</td><td/><td>-358109489</td></row>
+		<row><td>ID_STRING1</td><td>1033</td><td>http://www.TAFESA.com</td><td>0</td><td/><td>455547597</td></row>
+		<row><td>ID_STRING2</td><td>1033</td><td>TAFE SA</td><td>0</td><td/><td>455547597</td></row>
 		<row><td>ID_STRING3</td><td>1033</td><td>Launch |Built</td><td>0</td><td/><td>-358133392</td></row>
 		<row><td>IIDS_UITEXT_FeatureUninstalled</td><td>1033</td><td>This feature will remain uninstalled.</td><td>0</td><td/><td>-358146353</td></row>
 	</table>
@@ -3945,8 +3948,8 @@
 		<col def="S0">Value</col>
 		<row><td>ActiveLanguage</td><td>1033</td></row>
 		<row><td>Comments</td><td/></row>
-		<row><td>CurrentMedia</td><td dt:dt="bin.base64" md5="de9f554a3bc05c12be9c31b998217995">
-UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
+		<row><td>CurrentMedia</td><td dt:dt="bin.base64" md5="6d78a46bf2c52ee27034bbcad20f7f95">
+QwBEAF8AUgBPAE0AAQBFAHgAcAByAGUAcwBzAA==
 			</td></row>
 		<row><td>DefaultProductConfiguration</td><td>Express</td></row>
 		<row><td>EnableSwidtag</td><td>1</td></row>
@@ -3963,7 +3966,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>ISTheme</td><td>InstallShield Blue.theme</td></row>
 		<row><td>ISUSLock</td><td>{AE5F2889-F909-4728-9DEF-E5A0B5B89887}</td></row>
 		<row><td>ISUSSignature</td><td>{B0C7D960-79AE-4BCA-B8DA-283544B3D462}</td></row>
-		<row><td>ISVisitedViews</td><td>viewAssistant,viewRelease,viewISToday,viewProject,viewAppFiles,viewShortcuts,viewSystemSearch,viewCustomActions,viewLearnMore</td></row>
+		<row><td>ISVisitedViews</td><td>viewAssistant,viewRelease,viewISToday,viewProject,viewAppFiles,viewShortcuts,viewSystemSearch,viewCustomActions,viewLearnMore,viewIniFiles</td></row>
 		<row><td>Limited</td><td>1</td></row>
 		<row><td>LockPermissionMode</td><td>1</td></row>
 		<row><td>MsiExecCmdLineOptions</td><td/></row>
@@ -4021,6 +4024,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 	<table name="LaunchCondition">
 		<col key="yes" def="s255">Condition</col>
 		<col def="l255">Description</col>
+		<row><td>SQLEXP2008SP1FOUND&gt;="10.0.2531.00"</td><td>##IDPROP_EXPRESS_LAUNCH_CONDITION_SQLEXP2008SP1FOUND##</td></row>
 	</table>
 
 	<table name="ListBox">
@@ -4353,7 +4357,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>SERIALNUMBER</td><td/><td/></row>
 		<row><td>SERIALNUMVALSUCCESSRETVAL</td><td>1</td><td/></row>
 		<row><td>SHOWLAUNCHPROGRAM</td><td>-1</td><td/></row>
-		<row><td>SecureCustomProperties</td><td>ISFOUNDNEWERPRODUCTVERSION;USERNAME;COMPANYNAME;ISX_SERIALNUM;SUPPORTDIR</td><td/></row>
+		<row><td>SecureCustomProperties</td><td>ISFOUNDNEWERPRODUCTVERSION;USERNAME;COMPANYNAME;ISX_SERIALNUM;SUPPORTDIR;SQLEXP2008SP1FOUND</td><td/></row>
 		<row><td>SelectedSetupType</td><td>##IDS__DisplayName_Typical##</td><td/></row>
 		<row><td>SetupType</td><td>Typical</td><td/></row>
 		<row><td>UpgradeCode</td><td>{2FBD1C2B-8E11-4868-918D-45E71DAEB6BC}</td><td/></row>
@@ -4398,6 +4402,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="s255">Key</col>
 		<col def="S255">Name</col>
 		<col def="I2">Type</col>
+		<row><td>NewRegSignature</td><td>2</td><td>SOFTWARE\Microsoft\Microsoft SQL Server\SQLEXPRESS\MSSQLServer\CurrentVersion</td><td>CurrentVersion</td><td>2</td></row>
 	</table>
 
 	<table name="Registry">

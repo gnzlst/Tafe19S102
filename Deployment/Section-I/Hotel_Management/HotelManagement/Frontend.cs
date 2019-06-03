@@ -106,10 +106,15 @@ namespace Hotel_Manager
         private string cleaning; private string towel;
         private string surprise;
 
+        public SqlConnection conn;
+        public SqlDataReader dr;
+        public SqlCommand cmd;
+        public ConnectionStringSettings connSettings = ConfigurationManager.ConnectionStrings["DBConnectFrontEnd"];
+
         private void MainTab_Load(object sender, EventArgs e)
         {
             foodSupplyCheckBox.Enabled = false;
-           
+
         }
 
         public void foodMenuButton_Click(object sender, EventArgs e)
@@ -166,7 +171,7 @@ namespace Hotel_Manager
                 foodBill = bfast + Lnch + di_ner;
             }
         }
-     
+
         private void roomTypeComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
 
@@ -236,7 +241,7 @@ namespace Hotel_Manager
             reset_frontend();
         }
 
-        
+
         private void finalizeButton_Click(object sender, EventArgs e)
         {
             // no charge for services such as cleaning, towel or surprise
@@ -292,9 +297,11 @@ namespace Hotel_Manager
                 smsCheckBox.Text = "SMS Sent";
             }
         }
-      
+
         private void submitButton_Click(object sender, EventArgs e)
         {
+            string connectionString = connSettings.ConnectionString;
+
             birthday = (monthComboBox.SelectedItem) + "-" + (dayComboBox.SelectedIndex + 1) + "-" + yearTextBox.Text;
             Int32 getIDBack = 0;
             string query = "insert into reservation(first_name, last_name, birth_day, gender, phone_number, email_address, number_guest, street_address, apt_suite,city, state, zip_code, room_type, room_floor, room_number, total_bill,payment_type, card_type, card_number,card_exp,card_cvc, arrival_time, leaving_time, check_in, break_fast, lunch, dinner, supply_status, cleaning, towel, s_surprise, food_bill) values('" + firstNameTextBox.Text +
@@ -306,21 +313,21 @@ namespace Hotel_Manager
               "', '" + breakfast + "','" + lunch + "','" + dinner + "', '" + foodStatus + "', '" + Convert.ToInt32(cleaning) + "', '" + Convert.ToInt32(towel) + "', '" + Convert.ToInt32(surprise) + "','" + foodBill + "');";
             query += "SELECT CAST(scope_identity() AS int)";
 
-            SqlConnection connection = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB; database=frontend_reservation; AttachDbFilename=C:\Hotel_Management_(additional)\HotelManagement\frontend_reservation.mdf");
-
-            SqlCommand query_table = new SqlCommand(query, connection);
             try
             {
-                connection.Open();
+                conn = new SqlConnection(connectionString);
+                conn.Open();
+                cmd = new SqlCommand(query, conn);
+                cmd.CommandText = query;
+                SqlCommand query_table = new SqlCommand(query, conn);
                 getIDBack = (Int32)query_table.ExecuteScalar();
-
                 string userID = Convert.ToString(getIDBack);
-                SendSMS(getIDBack);
-                MetroFramework.MetroMessageBox.Show(this, "Entry successfully inserted into database. " + "\n\n" +
-                    "Provide this unique ID to the customer." + "\n\n" +
-                "USER UNIQUE ID: " + userID, "Report", MessageBoxButtons.OK, MessageBoxIcon.Question);
-
-                connection.Close();
+                dr = cmd.ExecuteReader();
+                if (dr.HasRows)
+                    MetroFramework.MetroMessageBox.Show(this, "Entry successfully inserted into database. " + "\n\n" +
+                 "Provide this unique ID to the customer." + "\n\n" +
+             "USER UNIQUE ID: " + userID, "Report", MessageBoxButtons.OK, MessageBoxIcon.Question);
+                conn.Close();
             }
             catch (Exception ex)
             {
@@ -357,16 +364,20 @@ namespace Hotel_Manager
                 }
             }
         }
-        public void ClearAllComboBox(Control controls){
-            foreach(Control control in controls.Controls){
+        public void ClearAllComboBox(Control controls)
+        {
+            foreach (Control control in controls.Controls)
+            {
                 if (control == roomTypeComboBox)
                 {
                     continue;
                 }
-                else if(control is ComboBox){
+                else if (control is ComboBox)
+                {
                     ((ComboBox)control).SelectedIndex = -1;
                 }
-                if (control.HasChildren) {
+                if (control.HasChildren)
+                {
                     ClearAllComboBox(control);
                 }
             }
@@ -401,27 +412,32 @@ namespace Hotel_Manager
         {
             if (primartyID > 1000)
             {
+                string connectionString = connSettings.ConnectionString;
+
+                birthday = (monthComboBox.SelectedItem) + "-" + (dayComboBox.SelectedIndex + 1) + "-" + yearTextBox.Text;
+                Int32 getIDBack = 0;
                 string query = "delete from reservation where Id = '" + primartyID + "'";
 
-                SqlConnection connection = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB; database=frontend_reservation; AttachDbFilename=C:\Hotel_Management_(additional)\HotelManagement\frontend_reservation.mdf");
-
-                SqlCommand query_table = new SqlCommand(query, connection);
-                SqlDataReader reader;
                 try
                 {
-                    connection.Open();
-                    reader = query_table.ExecuteReader();
-
-                    MetroFramework.MetroMessageBox.Show(this, "Reservation For the UNIQUE USER ID of: " + "\n\n" +
+                    conn = new SqlConnection(connectionString);
+                    conn.Open();
+                    cmd = new SqlCommand(query, conn);
+                    cmd.CommandText = query;
+                    SqlCommand query_table = new SqlCommand(query, conn);
+                    getIDBack = (Int32)query_table.ExecuteScalar();
+                    string userID = Convert.ToString(getIDBack);
+                    dr = cmd.ExecuteReader();
+                    if (dr.HasRows)
+                        MetroFramework.MetroMessageBox.Show(this, "Reservation For the UNIQUE USER ID of: " + "\n\n" +
                 " " + primartyID + " is DELETED.", "Deleted", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-
-                    connection.Close();
-
+                    conn.Close();
                 }
                 catch (Exception ex)
                 {
-                    MetroFramework.MetroMessageBox.Show(this, "Selected ID doesn't exist." + ex.ToString(), "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning);
+                    MessageBox.Show(ex.Message);
                 }
+
             }
             else
             {
@@ -437,37 +453,36 @@ namespace Hotel_Manager
 
         private void updateButton_Click(object sender, EventArgs e)
         {
+
+            string connectionString = connSettings.ConnectionString;
+
             birthday = (monthComboBox.SelectedItem) + "-" + (dayComboBox.SelectedIndex + 1) + "-" + yearTextBox.Text;
-           // MessageBox.Show(Convert.ToString(cleaning) + " " + Convert.ToString(towel) + " " + Convert.ToString(surprise));
             string query = "update reservation set first_name ='" + firstNameTextBox.Text +
-              "', last_name ='" + lastNameTextBox.Text + "', birth_day='" + birthday + "', gender='" + genderComboBox.SelectedItem + "', phone_number='" + phoneNumberTextBox.Text + "', email_address='" + emailTextBox.Text +
-              "', number_guest='" + (qtGuestComboBox.SelectedIndex + 1) + "', street_address='" + addLabel.Text + "', apt_suite='" + aptTextBox.Text + "', city='" + cityTextBox.Text +
-              "', state='" + stateComboBox.SelectedItem + "', zip_code='" + zipComboBox.Text + "', room_type='" + roomTypeComboBox.SelectedItem + "', room_floor='" + floorComboBox.SelectedItem +
-              "', room_number='" + roomNComboBox.SelectedItem + "', total_bill='" + finalizedTotalAmount + "', payment_type='" + paymentType +
-              "', card_type ='" + CardType + "', card_number='" + paymentCardNumber + "',card_exp='" + MM_YY_Of_Card + "', card_cvc='" + CVC_Of_Card + "', arrival_time='" + entryDatePicker.Text + "', leaving_time='" + depDatePicker.Text + "', break_fast='" + breakfast +
-              "', check_in='" + checkin + "', lunch='" + lunch + "', dinner='" + dinner + "', supply_status='" + foodStatus + "',cleaning='" + Convert.ToInt32(cleaning) + "',towel='" + Convert.ToInt32(towel) + "',s_surprise='" + Convert.ToInt32(surprise) + "',food_bill='" + foodBill + "' WHERE Id = '" + primartyID + "';";
+             "', last_name ='" + lastNameTextBox.Text + "', birth_day='" + birthday + "', gender='" + genderComboBox.SelectedItem + "', phone_number='" + phoneNumberTextBox.Text + "', email_address='" + emailTextBox.Text +
+             "', number_guest='" + (qtGuestComboBox.SelectedIndex + 1) + "', street_address='" + addLabel.Text + "', apt_suite='" + aptTextBox.Text + "', city='" + cityTextBox.Text +
+             "', state='" + stateComboBox.SelectedItem + "', zip_code='" + zipComboBox.Text + "', room_type='" + roomTypeComboBox.SelectedItem + "', room_floor='" + floorComboBox.SelectedItem +
+             "', room_number='" + roomNComboBox.SelectedItem + "', total_bill='" + finalizedTotalAmount + "', payment_type='" + paymentType +
+             "', card_type ='" + CardType + "', card_number='" + paymentCardNumber + "',card_exp='" + MM_YY_Of_Card + "', card_cvc='" + CVC_Of_Card + "', arrival_time='" + entryDatePicker.Text + "', leaving_time='" + depDatePicker.Text + "', break_fast='" + breakfast +
+             "', check_in='" + checkin + "', lunch='" + lunch + "', dinner='" + dinner + "', supply_status='" + foodStatus + "',cleaning='" + Convert.ToInt32(cleaning) + "',towel='" + Convert.ToInt32(towel) + "',s_surprise='" + Convert.ToInt32(surprise) + "',food_bill='" + foodBill + "' WHERE Id = '" + primartyID + "';";
 
-
-            SqlConnection connection = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB; database=frontend_reservation; AttachDbFilename=C:\Hotel_Management_(additional)\HotelManagement\frontend_reservation.mdf");
-
-            SqlCommand query_table = new SqlCommand(query, connection);
-            SqlDataReader reader;
             try
             {
-                connection.Open();
+                conn = new SqlConnection(connectionString);
+                conn.Open();
+                cmd = new SqlCommand(query, conn);
+                cmd.CommandText = query;
+                SqlCommand query_table = new SqlCommand(query, conn);
                 string userID = Convert.ToString(primartyID);
-                reader = query_table.ExecuteReader();
-                
-                // no code developed for writing into database. Next stage of development 
-                // simulate code writing into the database
-                MetroFramework.MetroMessageBox.Show(this, "Entry successfully updated into database. For the UNIQUE USER ID of: " + "\n\n" +
-                " " + userID, "Report", MessageBoxButtons.OK, MessageBoxIcon.Question);
+                dr = cmd.ExecuteReader();
+                if (dr.HasRows)
+                    MetroFramework.MetroMessageBox.Show(this, "Entry successfully updated into database. For the UNIQUE USER ID of: " + "\n\n" +
+               " " + userID, "Report", MessageBoxButtons.OK, MessageBoxIcon.Question);
                 SendSMS(primartyID);
-                while (reader.Read())
+                while (dr.Read())
                 {
                     //This is next stage of development
                 }
-                connection.Close();
+                conn.Close();
             }
             catch (Exception ex)
             {
@@ -501,45 +516,46 @@ namespace Hotel_Manager
         {
             getChecked();
             string getQuerystring = resEditButton.Text.Substring(0, 4).Replace(" ", string.Empty);
-          //  MessageBox.Show("ID+" + getQuerystring);
+            //  MessageBox.Show("ID+" + getQuerystring);
+            string connectionString = connSettings.ConnectionString;            
             string query = "Select * from reservation where Id= '" + getQuerystring + "'";
-
-            SqlConnection connection = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB; database=frontend_reservation; AttachDbFilename=C:\Hotel_Management_(additional)\HotelManagement\frontend_reservation.mdf");
-            SqlCommand query_table = new SqlCommand(query, connection);
-            SqlDataReader reader;
             try
             {
-                connection.Open();
-                reader = query_table.ExecuteReader();
-                while (reader.Read())
+                conn = new SqlConnection(connectionString);
+                conn.Open();
+                cmd = new SqlCommand(query, conn);
+                cmd.CommandText = query;
+                SqlCommand query_table = new SqlCommand(query, conn);
+                dr = cmd.ExecuteReader();
+                while (dr.Read())
                 {
                     taskFinder = true;
-                    string ID = reader["Id"].ToString();
-                    string first_name = reader["first_name"].ToString();
-                    string last_name = reader["last_name"].ToString();
-                    string birth_day = reader["birth_day"].ToString();
-                    string gender = reader["gender"].ToString();
-                    string phone_number = reader["phone_number"].ToString();
-                    string email_address = reader["email_address"].ToString();
-                    string number_guest = reader["number_guest"].ToString();
-                    string street_address = reader["street_address"].ToString();
-                    string apt_suite = reader["apt_suite"].ToString();
-                    string city = reader["city"].ToString();
-                    string state = reader["state"].ToString();
-                    string zip_code = reader["zip_code"].ToString();
+                    string ID = dr["Id"].ToString();
+                    string first_name = dr["first_name"].ToString();
+                    string last_name = dr["last_name"].ToString();
+                    string birth_day = dr["birth_day"].ToString();
+                    string gender = dr["gender"].ToString();
+                    string phone_number = dr["phone_number"].ToString();
+                    string email_address = dr["email_address"].ToString();
+                    string number_guest = dr["number_guest"].ToString();
+                    string street_address = dr["street_address"].ToString();
+                    string apt_suite = dr["apt_suite"].ToString();
+                    string city = dr["city"].ToString();
+                    string state = dr["state"].ToString();
+                    string zip_code = dr["zip_code"].ToString();
 
-                    string room_type = reader["room_type"].ToString();
-                    string room_floor = reader["room_floor"].ToString();
-                    string room_number = reader["room_number"].ToString();
+                    string room_type = dr["room_type"].ToString();
+                    string room_floor = dr["room_floor"].ToString();
+                    string room_number = dr["room_number"].ToString();
 
-                    string payment_type = reader["payment_type"].ToString();
-                    string card_number = reader["card_number"].ToString();
-                    string card_exp = reader["card_exp"].ToString();
-                    string card_cvc = reader["card_cvc"].ToString();
+                    string payment_type = dr["payment_type"].ToString();
+                    string card_number = dr["card_number"].ToString();
+                    string card_exp = dr["card_exp"].ToString();
+                    string card_cvc = dr["card_cvc"].ToString();
 
-                    string _cleaning = reader["cleaning"].ToString();
-                    string _towel = reader["towel"].ToString();
-                    string _surprise = reader["s_surprise"].ToString();
+                    string _cleaning = dr["cleaning"].ToString();
+                    string _towel = dr["towel"].ToString();
+                    string _surprise = dr["s_surprise"].ToString();
                     if (_cleaning == "True")
                     {
                         cleaning = "1";
@@ -565,22 +581,22 @@ namespace Hotel_Manager
                     FPayment = payment_type; FCnumber = card_number;
                     FCardCVC = card_cvc; FcardExpOne = card_exp.Substring(0, card_exp.IndexOf('/'));
                     FcardExpTwo = card_exp.Substring(card_exp.Length - Math.Min(2, card_exp.Length));
-                    string check_in = reader["check_in"].ToString();
+                    string check_in = dr["check_in"].ToString();
 
-                    string supply_status = reader["supply_status"].ToString();
-                    string food_billD = reader["food_bill"].ToString();
+                    string supply_status = dr["supply_status"].ToString();
+                    string food_billD = dr["food_bill"].ToString();
 
-                    string arrival_date = Convert.ToDateTime(reader["arrival_time"]).ToString("MM-dd-yyyy").Replace(" ", string.Empty);
+                    string arrival_date = Convert.ToDateTime(dr["arrival_time"]).ToString("MM-dd-yyyy").Replace(" ", string.Empty);
                     entryDatePicker.Value = Convert.ToDateTime(arrival_date);
 
-                    string leaving_date = Convert.ToDateTime(reader["leaving_time"]).ToString("MM-dd-yyyy").Replace(" ", string.Empty);
+                    string leaving_date = Convert.ToDateTime(dr["leaving_time"]).ToString("MM-dd-yyyy").Replace(" ", string.Empty);
                     depDatePicker.Value = Convert.ToDateTime(leaving_date);
                     entryDatePicker.Value.ToShortDateString();
                     depDatePicker.Value.ToShortDateString();
 
-                    string _breakfast = reader["break_fast"].ToString();
-                    string _lunch = reader["lunch"].ToString();
-                    string _dinner = reader["dinner"].ToString();
+                    string _breakfast = dr["break_fast"].ToString();
+                    string _lunch = dr["lunch"].ToString();
+                    string _dinner = dr["dinner"].ToString();
 
                     double Num;
                     bool isNum = double.TryParse(_lunch, out Num);
@@ -610,9 +626,6 @@ namespace Hotel_Manager
                     {
                         dinner = 0;
                     }
-
-
-
                     foodBill = Convert.ToInt32(food_billD);
 
                     if (supply_status == "True")
@@ -623,8 +636,6 @@ namespace Hotel_Manager
                     {
                         foodSupplyCheckBox.Checked = false;
                     }
-
-
                     firstNameTextBox.Text = first_name;
                     lastNameTextBox.Text = last_name;
                     phoneNumberTextBox.Text = phone_number;
@@ -656,9 +667,9 @@ namespace Hotel_Manager
 
 
                     primartyID = Convert.ToInt32(ID);
-                }
-                connection.Close();
-            }
+                }              
+                conn.Close();
+            }                
             catch (Exception ex)
             {
                 MessageBox.Show("COMBOBOX Selection: + " + ex.Message);
@@ -814,7 +825,7 @@ namespace Hotel_Manager
             }
 
         }
-        
+
 
         private void getChecked()
         {
@@ -884,11 +895,11 @@ namespace Hotel_Manager
 
             connection.Open();
             string query = "Select * from reservation where Id like '%" + searchTextBox.Text + "%' OR last_name like '%" + searchTextBox.Text + "%' OR first_name like '%" + searchTextBox.Text + "%' OR gender like '%" + searchTextBox.Text + "%' OR state like '%" + searchTextBox.Text + "%' OR city like '%" + searchTextBox.Text + "%' OR room_number like '%" + searchTextBox.Text + "%' OR room_type like '%" + searchTextBox.Text + "%' OR email_address like '%" + searchTextBox.Text + "%' OR phone_number like '%" + searchTextBox.Text + "%'";
-           
+
             SqlCommand com = new SqlCommand(query, connection);
             SqlDataAdapter data_adapter = new SqlDataAdapter(query, connection);
             DataTable data_table = new DataTable();
-            
+
             data_adapter.Fill(data_table);
 
             BindingSource bindingSource = new BindingSource();
@@ -911,9 +922,9 @@ namespace Hotel_Manager
             {
                 searchDataGridView.Visible = false;
                 SearchError.Visible = true;
-                SearchError.Text = "SORRY DUDE :(" +"\n"
-                    +"I ran out of gas trying to search for "+ searchTextBox.Text +"\n"
-                +"I sure will find it next time."; 
+                SearchError.Text = "SORRY DUDE :(" + "\n"
+                    + "I ran out of gas trying to search for " + searchTextBox.Text + "\n"
+                + "I sure will find it next time.";
             }
         }
 
