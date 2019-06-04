@@ -333,6 +333,10 @@ namespace Hotel_Manager
             {
                 MessageBox.Show(ex.Message);
             }
+            finally
+            {
+                conn.Close();
+            }
 
             ComboBoxItemsFromDataBase();
             LoadForDataGridView();
@@ -437,6 +441,10 @@ namespace Hotel_Manager
                 {
                     MessageBox.Show(ex.Message);
                 }
+                finally
+                {
+                    conn.Close();
+                }
 
             }
             else
@@ -487,6 +495,10 @@ namespace Hotel_Manager
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                conn.Close();
             }
 
             ComboBoxItemsFromDataBase();
@@ -674,47 +686,62 @@ namespace Hotel_Manager
             {
                 MessageBox.Show("COMBOBOX Selection: + " + ex.Message);
             }
+            finally
+            {
+                conn.Close();
+            }
         }
 
         private void ComboBoxItemsFromDataBase()
         {
+
+            string connectionString = connSettings.ConnectionString;           
             string query = "Select * from reservation";
 
-            SqlConnection connection = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB; database=frontend_reservation; AttachDbFilename=C:\Hotel_Management_(additional)\HotelManagement\frontend_reservation.mdf");
-
-            SqlCommand query_table = new SqlCommand(query, connection);
-            SqlDataReader reader;
             try
             {
-                connection.Open();
-                reader = query_table.ExecuteReader();
-                while (reader.Read())
-                {
-                    string ID = reader["ID"].ToString();
-                    string first_name = reader["first_name"].ToString();
-                    string last_name = reader["last_name"].ToString();
-                    string phone_number = reader["phone_number"].ToString();
-                    resEditButton.Items.Add(ID + "  | " + first_name + "  " + last_name + " | " + phone_number);
-
-                }
-                connection.Close();
-            }
+                conn = new SqlConnection(connectionString);
+                conn.Open();
+                cmd = new SqlCommand(query, conn);
+                cmd.CommandText = query;
+                SqlCommand query_table = new SqlCommand(query, conn);
+                dr = cmd.ExecuteReader();
+                if (dr.HasRows)
+                    while (dr.Read())
+                    {
+                        string ID = dr["ID"].ToString();
+                        string first_name = dr["first_name"].ToString();
+                        string last_name = dr["last_name"].ToString();
+                        string phone_number = dr["phone_number"].ToString();
+                        resEditButton.Items.Add(ID + "  | " + first_name + "  " + last_name + " | " + phone_number);
+                    }
+                conn.Close();
+            }          
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                conn.Close();
             }
         }
 
         private void LoadForDataGridView()
         {
 
-            SqlConnection connection = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB; database=frontend_reservation; AttachDbFilename=C:\Hotel_Management_(additional)\HotelManagement\frontend_reservation.mdf");
+            string connectionString = connSettings.ConnectionString;           
+            string query = "Select * from reservation";
 
-            SqlCommand query = new SqlCommand("Select * from reservation", connection);
             try
             {
-                connection.Open();
-                SqlDataAdapter dataAdapter = new SqlDataAdapter(query);
+                conn = new SqlConnection(connectionString);
+                conn.Open();
+                cmd = new SqlCommand(query, conn);
+                cmd.CommandText = query;
+                SqlCommand query_table = new SqlCommand(query, conn);
+                dr = cmd.ExecuteReader();              
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(query_table);
                 DataTable dataTable = new DataTable();
                 dataAdapter.Fill(dataTable);
 
@@ -722,11 +749,15 @@ namespace Hotel_Manager
                 bindingSource.DataSource = dataTable;
                 resTotalDataGridView.DataSource = bindingSource;
                 dataAdapter.Update(dataTable);
-                connection.Close();
+                conn.Close();
             }
             catch (Exception)
             {
                 MetroFramework.MetroMessageBox.Show(this, "Error loading data", "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.None);
+            }
+            finally
+            {
+                conn.Close();
             }
         }
 
@@ -746,112 +777,127 @@ namespace Hotel_Manager
 
         private void GetOccupiedRoom()
         {
+
+            string connectionString = connSettings.ConnectionString;
             roomOccupiedListBox.Items.Clear();
             string query = "Select * from reservation where check_in = '" + "True" + "';";
 
-            SqlConnection connection = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB; database=frontend_reservation; AttachDbFilename=C:\Hotel_Management_(additional)\HotelManagement\frontend_reservation.mdf");
-
-            SqlCommand query_table = new SqlCommand(query, connection);
-            SqlDataReader reader;
             try
             {
-                connection.Open();
-                reader = query_table.ExecuteReader();
-                while (reader.Read())
-                {
-                    string room_number = reader["room_number"].ToString();
-                    string room_type = reader["room_type"].ToString();
-                    string ID = reader["ID"].ToString();
-                    string first_name = reader["first_name"].ToString();
-                    string last_name = reader["last_name"].ToString();
-                    string phone_number = reader["phone_number"].ToString();
-                    string arrival_time = reader["arrival_time"].ToString();
-                    string dep_time = reader["leaving_time"].ToString();
-                    roomOccupiedListBox.Items.Add("[" + room_number.Replace(" ", string.Empty) + "]" +
-                        " " + room_type.Replace(" ", string.Empty) +
-                        " " + ID.Replace(" ", string.Empty) +
-                        " " + "[" + first_name.Replace(" ", string.Empty) +
-                        " " + last_name.Replace(" ", string.Empty) + "]" +
-                        " " + phone_number.Replace(" ", string.Empty));
-                }
-                connection.Close();
+                conn = new SqlConnection(connectionString);
+                conn.Open();
+                cmd = new SqlCommand(query, conn);
+                cmd.CommandText = query;
+                SqlCommand query_table = new SqlCommand(query, conn);
+                dr = cmd.ExecuteReader();
+                if (dr.HasRows)
+                    while (dr.Read())
+                    {
+                        string room_number = dr["room_number"].ToString();
+                        string room_type = dr["room_type"].ToString();
+                        string ID = dr["ID"].ToString();
+                        string first_name = dr["first_name"].ToString();
+                        string last_name = dr["last_name"].ToString();
+                        string phone_number = dr["phone_number"].ToString();
+                        string arrival_time = dr["arrival_time"].ToString();
+                        string dep_time = dr["leaving_time"].ToString();
+                        roomOccupiedListBox.Items.Add("[" + room_number.Replace(" ", string.Empty) + "]" +
+                            " " + room_type.Replace(" ", string.Empty) +
+                            " " + ID.Replace(" ", string.Empty) +
+                            " " + "[" + first_name.Replace(" ", string.Empty) +
+                            " " + last_name.Replace(" ", string.Empty) + "]" +
+                            " " + phone_number.Replace(" ", string.Empty));
+                    }
+                conn.Close();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                conn.Close();
             }
 
         }
 
         private void ReservedRoom()
         {
+
+            string connectionString = connSettings.ConnectionString;
             roomReservedListBox.Items.Clear();
-
             string query = "Select * from reservation where check_in = '" + "False" + "';";
-
-            SqlConnection connection = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB; database=frontend_reservation; AttachDbFilename=C:\Hotel_Management_(additional)\HotelManagement\frontend_reservation.mdf");
-            SqlCommand query_table = new SqlCommand(query, connection);
-            SqlDataReader reader;
             try
             {
-                connection.Open();
-                reader = query_table.ExecuteReader();
-                while (reader.Read())
-                {
-                    string room_number = reader["room_number"].ToString();
-                    string room_type = reader["room_type"].ToString();
-                    string ID = reader["ID"].ToString();
-                    string first_name = reader["first_name"].ToString();
-                    string last_name = reader["last_name"].ToString();
-                    string phone_number = reader["phone_number"].ToString();
+                conn = new SqlConnection(connectionString);
+                conn.Open();
+                cmd = new SqlCommand(query, conn);
+                cmd.CommandText = query;
+                SqlCommand query_table = new SqlCommand(query, conn);
+                dr = cmd.ExecuteReader();
+                if (dr.HasRows)
+                    while (dr.Read())
+                    {
+                        string room_number = dr["room_number"].ToString();
+                        string room_type = dr["room_type"].ToString();
+                        string ID = dr["ID"].ToString();
+                        string first_name = dr["first_name"].ToString();
+                        string last_name = dr["last_name"].ToString();
+                        string phone_number = dr["phone_number"].ToString();
 
-                    string arrival_date = Convert.ToDateTime(reader["arrival_time"]).ToString("MM-dd-yyyy");
-                    string leaving_date = Convert.ToDateTime(reader["leaving_time"]).ToString("MM-dd-yyy");
+                        string arrival_date = Convert.ToDateTime(dr["arrival_time"]).ToString("MM-dd-yyyy");
+                        string leaving_date = Convert.ToDateTime(dr["leaving_time"]).ToString("MM-dd-yyy");
 
-                    roomReservedListBox.Items.Add("[" + room_number.Replace(" ", string.Empty) + "]" +
-                        " " + room_type.Replace(" ", string.Empty) +
-                        " " + ID.Replace(" ", string.Empty) +
-                        " " + first_name.Replace(" ", string.Empty) +
-                        " " + last_name.Replace(" ", string.Empty) +
-                        " " + phone_number.Replace(" ", string.Empty) +
-                        " " + arrival_date.Replace(" ", string.Empty) +
-                        " " + leaving_date.Replace(" ", string.Empty));
-                }
-                connection.Close();
-            }
+                        roomReservedListBox.Items.Add("[" + room_number.Replace(" ", string.Empty) + "]" +
+                            " " + room_type.Replace(" ", string.Empty) +
+                            " " + ID.Replace(" ", string.Empty) +
+                            " " + first_name.Replace(" ", string.Empty) +
+                            " " + last_name.Replace(" ", string.Empty) +
+                            " " + phone_number.Replace(" ", string.Empty) +
+                            " " + arrival_date.Replace(" ", string.Empty) +
+                            " " + leaving_date.Replace(" ", string.Empty));
+                    }
+                conn.Close();
+            }          
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-
+            finally
+            {
+                conn.Close();
+            }
         }
-
 
         private void getChecked()
         {
+
+            string connectionString = connSettings.ConnectionString;
             List<string> TakenRoomList = new List<string>();
-
             string query = "Select room_number from reservation where check_in = '" + "True" + "';";
-
-            SqlConnection connection = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB; database=frontend_reservation; AttachDbFilename=C:\Hotel_Management_(additional)\HotelManagement\frontend_reservation.mdf");
-
-            SqlCommand query_table = new SqlCommand(query, connection);
-
-            SqlDataReader reader;
             try
             {
-                connection.Open();
-                reader = query_table.ExecuteReader();
-                while (reader.Read())
-                {
-                    string room_number = reader["room_number"].ToString();
-                    TakenRoomList.Add(room_number.Replace(" ", string.Empty));
-                }
-                connection.Close();
-            }
+                conn = new SqlConnection(connectionString);
+                conn.Open();
+                cmd = new SqlCommand(query, conn);
+                cmd.CommandText = query;
+                SqlCommand query_table = new SqlCommand(query, conn);
+                dr = cmd.ExecuteReader();
+                if (dr.HasRows)
+                    while (dr.Read())
+                    {
+                        string room_number = dr["room_number"].ToString();
+                        TakenRoomList.Add(room_number.Replace(" ", string.Empty));
+                    }
+                conn.Close();
+            }           
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                conn.Close();
             }
 
             foreach (string roomList in TakenRoomList)
@@ -891,41 +937,60 @@ namespace Hotel_Manager
         private void searchButton_Click(object sender, EventArgs e)
         {
 
-            SqlConnection connection = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB; database=frontend_reservation; AttachDbFilename=C:\Hotel_Management_(additional)\HotelManagement\frontend_reservation.mdf");
-
-            connection.Open();
+            string connectionString = connSettings.ConnectionString;
             string query = "Select * from reservation where Id like '%" + searchTextBox.Text + "%' OR last_name like '%" + searchTextBox.Text + "%' OR first_name like '%" + searchTextBox.Text + "%' OR gender like '%" + searchTextBox.Text + "%' OR state like '%" + searchTextBox.Text + "%' OR city like '%" + searchTextBox.Text + "%' OR room_number like '%" + searchTextBox.Text + "%' OR room_type like '%" + searchTextBox.Text + "%' OR email_address like '%" + searchTextBox.Text + "%' OR phone_number like '%" + searchTextBox.Text + "%'";
 
-            SqlCommand com = new SqlCommand(query, connection);
-            SqlDataAdapter data_adapter = new SqlDataAdapter(query, connection);
-            DataTable data_table = new DataTable();
-
-            data_adapter.Fill(data_table);
-
-            BindingSource bindingSource = new BindingSource();
-            bindingSource.DataSource = data_table;
-            searchDataGridView.DataSource = bindingSource;
-            data_adapter.Update(data_table);
-
-            SqlDataReader reader;
-            reader = com.ExecuteReader();
-            if (reader.HasRows)
+            try
             {
-                reader.Read();
-                searchButton.Location = new Point(752, 7);
-                searchTextBox.Location = new Point(68, 7);
-                searchDataGridView.Visible = true;
-                SearchError.Visible = false;
+                conn = new SqlConnection(connectionString);
+                conn.Open();
+                cmd = new SqlCommand(query, conn);
+                cmd.CommandText = query;
+                SqlCommand query_table = new SqlCommand(query, conn);
+                dr = cmd.ExecuteReader();
+                SqlDataAdapter data_adapter = new SqlDataAdapter(query, conn);
+                DataTable data_table = new DataTable();
+                data_adapter.Fill(data_table);
 
+                BindingSource bindingSource = new BindingSource();
+                bindingSource.DataSource = data_table;
+                searchDataGridView.DataSource = bindingSource;
+                data_adapter.Update(data_table);
+                conn.Close();
+                
+                dr = cmd.ExecuteReader();
+                if (dr.HasRows)
+                {
+                    dr.Read();
+                    searchButton.Location = new Point(752, 7);
+                    searchTextBox.Location = new Point(68, 7);
+                    searchDataGridView.Visible = true;
+                    SearchError.Visible = false;
+
+                }
+                else
+                {
+                    searchDataGridView.Visible = false;
+                    SearchError.Visible = true;
+                    SearchError.Text = "SORRY DUDE :(" + "\n"
+                        + "I ran out of gas trying to search for " + searchTextBox.Text + "\n"
+                    + "I sure will find it next time.";
+                }
             }
-            else
+            catch (Exception)
             {
-                searchDataGridView.Visible = false;
-                SearchError.Visible = true;
-                SearchError.Text = "SORRY DUDE :(" + "\n"
-                    + "I ran out of gas trying to search for " + searchTextBox.Text + "\n"
-                + "I sure will find it next time.";
+                MetroFramework.MetroMessageBox.Show(this, "Error loading data", "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.None);
             }
+            finally
+            {
+                conn.Close();
+            }
+
+
+
+
+
+
         }
 
     }
